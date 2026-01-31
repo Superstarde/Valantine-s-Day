@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine's Day Amna! ❤️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0f172a; /* Dark background start */
+            overflow-x: hidden;
+            color: white;
+        }
+        .font-dancing { font-family: 'Dancing Script', cursive; }
+        .font-playfair { font-family: 'Playfair Display', serif; }
+
+        /* --- Section Transitions --- */
+        .section {
+            display: none;
+            min-height: 100vh;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: opacity 1s ease-in-out;
+            opacity: 0;
+        }
+        .section.active {
+            display: flex;
+            opacity: 1;
+            z-index: 10;
+        }
+
+        /* --- Animations --- */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            40% { transform: scale(1); }
+            60% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .heart-beat { animation: heartbeat 1.5s infinite; }
+        .floating { animation: float 3s ease-in-out infinite; }
+
+        /* --- Screen 1: Intro --- */
+        .intro-bg {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d1b2d 100%);
+        }
+        .glow-btn {
+            box-shadow: 0 0 15px #e11d48;
+            transition: all 0.3s ease;
+        }
+        .glow-btn:hover {
+            box-shadow: 0 0 25px #e11d48, 0 0 50px #e11d48;
+            transform: scale(1.05);
+        }
+
+        /* --- Screen 2: Memories (Carousel) --- */
+        .memory-bg {
+            background: linear-gradient(to bottom right, #fce7f3, #fbcfe8, #f472b6);
+            color: #831843;
+        }
+        .carousel-item {
+            transition: all 0.5s ease;
+            transform: scale(0.8);
+            opacity: 0.5;
+            filter: blur(2px);
+        }
+        .carousel-item.active {
+            transform: scale(1);
+            opacity: 1;
+            filter: blur(0);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* --- Screen 3: Letter --- */
+        .letter-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .paper {
+            background: #fff;
+            background-image: radial-gradient(#f0f0f0 1px, transparent 1px);
+            background-size: 20px 20px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+            transform: rotate(-1deg);
+        }
+
+        /* --- Floating Hearts Background --- */
+        .bg-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .bg-heart {
+            position: absolute;
+            color: rgba(225, 29, 72, 0.3);
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            from { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.5; }
+            to { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="love_song.mp3" type="audio/mpeg"> 
+    </audio>
+    <div class="fixed bottom-4 right-4 z-50">
+        <button id="musicBtn" class="bg-white/20 backdrop-blur-md p-3 rounded-full text-white hover:bg-white/40 transition">
+            🎵 Play Music
+        </button>
+    </div>
+
+    <div class="bg-hearts" id="bgHearts"></div>
+
+    <section id="screen-1" class="section active intro-bg flex-col items-center justify-center text-center px-4">
+        <h1 class="text-5xl md:text-7xl font-dancing text-pink-500 mb-4 opacity-0" id="intro-title">
+            Hey Amna...
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-300 mb-12 opacity-0 font-light" id="intro-sub">
+            I have something special for you.
+        </p>
+        
+        <button onclick="nextSection(2)" id="start-btn" 
+                class="opacity-0 px-8 py-4 bg-gradient-to-r from-rose-500 to-pink-600 rounded-full text-xl font-bold tracking-wider hover:from-rose-600 hover:to-pink-700 transition transform hover:-translate-y-1 glow-btn">
+            Open My Heart 💌
+        </button>
+    </section>
+
+    <section id="screen-2" class="section memory-bg flex-col items-center justify-center overflow-hidden relative">
+        <h2 class="text-4xl md:text-6xl font-dancing text-rose-600 mb-8 z-10 text-center px-4">
+            Our Beautiful Moments
+        </h2>
+
+        <div class="relative w-full max-w-4xl h-[400px] md:h-[500px] flex items-center justify-center z-10 perspective-1000">
+            <button onclick="moveCarousel(-1)" class="absolute left-4 md:left-10 z-20 text-4xl text-rose-500 hover:scale-125 transition">❮</button>
+            
+            <div id="carousel-track" class="flex items-center justify-center w-full h-full">
+                </div>
+
+            <button onclick="moveCarousel(1)" class="absolute right-4 md:right-10 z-20 text-4xl text-rose-500 hover:scale-125 transition">❯</button>
+        </div>
+
+        <p id="caption-text" class="text-xl md:text-2xl font-playfair text-rose-800 mt-6 h-12 text-center z-10 italic transition-opacity duration-500">
+            </p>
+
+        <button onclick="nextSection(3)" class="mt-8 px-8 py-3 bg-white text-rose-500 rounded-full font-bold shadow-lg hover:bg-rose-50 transition z-10">
+            Read My Letter ➡️
+        </button>
+    </section>
+
+    <section id="screen-3" class="section letter-bg flex items-center justify-center p-4">
+        <div class="paper max-w-2xl w-full p-8 md:p-12 rounded-lg relative text-gray-800">
+            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-32 h-8 bg-pink-200/50 rotate-2"></div>
+
+            <h2 class="text-4xl font-dancing text-center text-purple-700 mb-6">My Dearest Amna,</h2>
+            
+            <div class="space-y-4 font-playfair text-lg leading-relaxed overflow-y-auto max-h-[60vh] pr-2 custom-scrollbar">
+                <p>
+                    Happy Valentine's Day! ❤️
+                </p>
+                <p>
+                    From the moment you entered my life, colors seemed brighter, and the world felt a little warmer. You are the smile I wear without realizing it, and the thought that keeps me going on difficult days.
+                </p>
+                <p>
+                    Distance may separate us physically right now, but my heart is always right there beside you. I cherish every memory we've made and look forward to the thousands more we have yet to create.
+                </p>
+                <p>
+                    Thank you for being my friend, my confidant, and my inspiration. Today is all about celebrating <b>YOU</b>.
+                </p>
+                <p class="text-center font-bold text-pink-600 mt-8">
+                    Always Yours,<br>
+                    <span class="text-2xl font-dancing">Dev</span>
+                </p>
+            </div>
+
+            <div class="absolute -bottom-4 -right-4 text-4xl floating">🌹</div>
+            <div class="absolute -top-4 -left-4 text-4xl floating" style="animation-delay: 1s">✨</div>
+        </div>
+        
+        <button onclick="location.reload()" class="fixed top-4 right-4 text-white/50 hover:text-white text-sm">
+            Replay ↻
+        </button>
+    </section>
+
+    <script>
+        // --- CONFIGURATION ---
+        // 1. PLACEHOLDER IMAGES (Replace these URLs with your actual file paths like 'images/pic1.jpg')
+        const memories = [
+            { img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=2070&auto=format&fit=crop", caption: "Your smile lights up my world..." },
+            { img: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=2069&auto=format&fit=crop", caption: "Every moment with you is magic." },
+            { img: "https://images.unsplash.com/photo-1522263842439-347f062b8475?q=80&w=2068&auto=format&fit=crop", caption: "Distance means nothing when you mean everything." },
+            { img: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?q=80&w=1976&auto=format&fit=crop", caption: "Forever grateful for you." },
+            { img: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=1974&auto=format&fit=crop", caption: "Happy Valentine's Day, my love! ❤️" }
+        ];
+
+        // --- GLOBAL VARIABLES ---
+        let currentSection = 1;
+        let currentSlide = 0;
+        const bgMusic = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+
+        // --- MUSIC CONTROL ---
+        musicBtn.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                musicBtn.innerText = "⏸️ Pause Music";
+            } else {
+                bgMusic.pause();
+                musicBtn.innerText = "🎵 Play Music";
+            }
+        });
+
+        // --- ANIMATION INIT ---
+        window.onload = () => {
+            // Animate Background Hearts
+            const heartContainer = document.getElementById('bgHearts');
+            const symbols = ['❤️', '💖', '🌹', '✨', '🦋'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('bg-heart');
+                heart.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.fontSize = Math.random() * 20 + 10 + "px";
+                heart.style.animationDuration = Math.random() * 3 + 5 + "s";
+                heartContainer.appendChild(heart);
+                
+                setTimeout(() => { heart.remove() }, 8000);
+            }, 500);
+
+            // Animate Intro Screen
+            gsap.to("#intro-title", { opacity: 1, y: 0, duration: 1.5, ease: "back.out" });
+            gsap.to("#intro-sub", { opacity: 1, y: 0, delay: 0.5, duration: 1.5 });
+            gsap.to("#start-btn", { opacity: 1, y: 0, delay: 1, duration: 1 });
+            
+            // Preload Carousel
+            renderCarousel();
+        };
+
+        // --- NAVIGATION ---
+        function nextSection(sectionNum) {
+            // Fade out current
+            document.getElementById(`screen-${currentSection}`).classList.remove('active');
+            
+            // Wait for fade out, then show next
+            setTimeout(() => {
+                currentSection = sectionNum;
+                const nextScreen = document.getElementById(`screen-${sectionNum}`);
+                nextScreen.classList.add('active');
+                
+                // Trigger specific animations based on section
+                if(sectionNum === 2) updateCarouselDisplay();
+                if(sectionNum === 3) runConfetti();
+            }, 500);
+        }
+
+        // --- CAROUSEL LOGIC ---
+        function renderCarousel() {
+            const track = document.getElementById('carousel-track');
+            track.innerHTML = '';
+            
+            memories.forEach((mem, index) => {
+                const img = document.createElement('img');
+                img.src = mem.img;
+                img.classList.add('carousel-item', 'absolute', 'rounded-xl', 'shadow-2xl', 'object-cover');
+                // Responsive sizing
+                img.style.width = window.innerWidth < 768 ? '260px' : '400px';
+                img.style.height = window.innerWidth < 768 ? '350px' : '500px';
+                img.dataset.index = index;
+                track.appendChild(img);
+            });
+        }
+
+        function moveCarousel(direction) {
+            currentSlide = (currentSlide + direction + memories.length) % memories.length;
+            updateCarouselDisplay();
+        }
+
+        function updateCarouselDisplay() {
+            const items = document.querySelectorAll('.carousel-item');
+            const caption = document.getElementById('caption-text');
+            
+            // Fade out caption briefly
+            caption.style.opacity = 0;
+
+            items.forEach((item, index) => {
+                // Calculate distance from current slide
+                let offset = index - currentSlide;
+                
+                // Handle wrapping for infinite loop effect logic visuals
+                if (offset > memories.length / 2) offset -= memories.length;
+                if (offset < -memories.length / 2) offset += memories.length;
+
+                // Visual styles based on offset
+                if (offset === 0) {
+                    // Center Item
+                    item.style.zIndex = 10;
+                    item.style.transform = 'translateX(0) scale(1)';
+                    item.style.opacity = 1;
+                    item.style.filter = 'blur(0px)';
+                    item.classList.add('active');
+                } else {
+                    // Side Items
+                    item.style.zIndex = 5 - Math.abs(offset);
+                    item.style.transform = `translateX(${offset * 60}px) scale(${1 - Math.abs(offset) * 0.1})`;
+                    item.style.opacity = 0.5;
+                    item.style.filter = 'blur(3px)';
+                    item.classList.remove('active');
+                }
+            });
+
+            // Update caption after short delay
+            setTimeout(() => {
+                caption.innerText = memories[currentSlide].caption;
+                caption.style.opacity = 1;
+            }, 300);
+        }
+
+        // --- CONFETTI EFFECT (Simple JS implementation) ---
+        function runConfetti() {
+            const colors = ['#ff0000', '#ff69b4', '#ffffff', '#800080'];
+            
+            for(let i=0; i<100; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.top = '-10px';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.zIndex = '100';
+                document.body.appendChild(confetti);
+
+                gsap.to(confetti, {
+                    y: window.innerHeight + 100,
+                    x: (Math.random() - 0.5) * 200,
+                    rotation: 360,
+                    duration: Math.random() * 2 + 3,
+                    ease: "power1.out",
+                    onComplete: () => confetti.remove()
+                });
+            }
+        }
+    </script>
+</body>
+</html>
