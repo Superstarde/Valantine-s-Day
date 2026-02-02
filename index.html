@@ -12,7 +12,7 @@
         body {
             font-family: 'Poppins', sans-serif;
             background: #000;
-            overflow: hidden; /* FORCE NO SCROLLING ON BODY */
+            overflow: hidden;
             color: #fce7f3;
             margin: 0;
             height: 100vh;
@@ -30,11 +30,11 @@
             left: 0;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Centering content vertically */
+            justify-content: center;
             opacity: 0;
             transition: opacity 0.8s ease-in-out;
             z-index: 10;
-            overflow: hidden; /* Prevent section scrolling */
+            overflow: hidden;
         }
         .section.active {
             display: flex;
@@ -51,30 +51,27 @@
         .carousel-container {
             position: relative;
             width: 100%;
-            /* Dynamic height based on screen size so it fits everywhere */
             height: 50vh; 
             display: flex;
             justify-content: center;
             align-items: center;
             perspective: 1000px;
-            margin-top: -20px; /* Slight pull up */
+            margin-top: -20px;
         }
         
         .carousel-item {
             position: absolute;
-            /* Responsive Width/Height */
             width: 65vw; 
             max-width: 300px;
-            height: 45vh; /* Fits within viewport */
+            height: 45vh; 
             max-height: 450px;
-            
             border-radius: 15px;
             background: #fff;
             overflow: hidden;
             cursor: pointer;
             border: 3px solid #ec4899; 
             box-shadow: 0 0 15px #ec4899;
-            will-change: transform; /* Performance optimization */
+            will-change: transform;
         }
 
         .carousel-item img {
@@ -109,7 +106,7 @@
         }
 
         .envelope {
-            width: 85vw; /* Mobile friendly width */
+            width: 85vw;
             max-width: 320px;
             height: 200px;
             background: #be123c;
@@ -126,13 +123,12 @@
             left: 0;
             width: 0;
             height: 0;
-            border-left: 42.5vw solid transparent; /* Responsive borders */
+            border-left: 42.5vw solid transparent;
             border-right: 42.5vw solid transparent;
             border-top: 130px solid #e11d48;
             transform-origin: top;
             z-index: 6;
         }
-        /* Max width override for flap on desktop */
         @media(min-width: 380px) {
             .envelope-flap {
                 border-left: 160px solid transparent;
@@ -170,9 +166,8 @@
             z-index: 3;
             transform: scale(0.8);
             opacity: 0;
-            overflow-y: auto; /* ALLOW SCROLLING INSIDE LETTER */
+            overflow-y: auto;
             border-radius: 5px;
-            /* Hide scrollbar visually but keep functionality */
             scrollbar-width: none; 
             -ms-overflow-style: none;
         }
@@ -234,7 +229,7 @@
             <button class="nav-btn absolute right-2 md:right-10" onclick="moveSlide(1)">❯</button>
         </div>
 
-        <div class="absolute bottom-20 w-full flex items-center justify-center px-4 text-center z-20">
+        <div class="absolute bottom-24 w-full flex items-center justify-center px-4 text-center z-20">
             <p id="caption" class="text-lg md:text-2xl font-playfair text-pink-200 italic transition-opacity duration-300 min-h-[3rem]"></p>
         </div>
 
@@ -265,10 +260,6 @@
 
                         <p>
                             Amna, log Valentine's Day par tohfe dete hain, par main aapko apna aane wala har lamha dena chahta hoon. Aap mere liye sirf ek rishta nahi ho, aap sukoon ka wo thikana ho jahan main din bhar ki thakan ke baad panah leta hoon. 
-                        </p>
-
-                        <p>
-                            
                         </p>
 
                         <p>
@@ -326,7 +317,7 @@
 
         function nextSection(id) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            const next = document.getElementById(screen-${id});
+            const next = document.getElementById(`screen-${id}`);
             next.classList.add('active');
             
             if(id === 3) renderCarousel();
@@ -351,7 +342,7 @@
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         textAlign: 'center', padding: '10px', fontSize: '12px'
                     });
-                    errDiv.innerHTML = <strong>Photo?</strong><br>${slide.img};
+                    errDiv.innerHTML = `<strong>Photo?</strong><br>${slide.img}`;
                     el.appendChild(errDiv);
                 };
                 el.onclick = () => moveSlide(index - currentSlide);
@@ -386,10 +377,10 @@
                 } else if (Math.abs(visualOffset) === 1) {
                     // Closer overlap for mobile
                     const xOffset = visualOffset * (window.innerWidth < 600 ? 150 : 220); 
-                    transform = translateX(${xOffset}px) scale(0.8) rotateY(${visualOffset * -15}deg);
+                    transform = `translateX(${xOffset}px) scale(0.8) rotateY(${visualOffset * -15}deg)`;
                     zIndex = 5; opacity = 0.6; pointerEvents = 'auto'; 
                 } else {
-                    transform = translateX(${visualOffset * 100}px) scale(0);
+                    transform = `translateX(${visualOffset * 100}px) scale(0)`;
                     opacity = 0;
                 }
                 item.style.transform = transform;
@@ -430,7 +421,7 @@
                 ease: "power2.inOut" 
             })
             .to("#letter", { 
-                y: -100, 
+                y: -120, 
                 opacity: 1,
                 zIndex: 4, 
                 duration: 1,
@@ -472,7 +463,7 @@
                 container.appendChild(h);
                 setTimeout(() => {
                     h.style.top = '-10%';
-                    h.style.transform = rotate(${Math.random() * 360}deg);
+                    h.style.transform = `rotate(${Math.random() * 360}deg)`;
                 }, 100);
                 setTimeout(() => h.remove(), 8000);
             }, 800);
