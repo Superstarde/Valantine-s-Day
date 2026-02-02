@@ -1,293 +1,485 @@
+
+You said:
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>For My Valentine ❤️</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Valentine ❤️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #000;
+            overflow: hidden; /* FORCE NO SCROLLING ON BODY */
+            color: #fce7f3;
+            margin: 0;
+            height: 100vh;
+        }
+        .font-dancing { font-family: 'Dancing Script', cursive; }
+        .font-playfair { font-family: 'Playfair Display', serif; }
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+        /* --- Screens / Sections --- */
+        .section {
+            display: none;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            left: 0;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Centering content vertically */
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            z-index: 10;
+            overflow: hidden; /* Prevent section scrolling */
+        }
+        .section.active {
+            display: flex;
+            opacity: 1;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+        /* --- Backgrounds --- */
+        .bg-intro { background: radial-gradient(circle at center, #2a0a18 0%, #000000 100%); }
+        .bg-wish { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); color: #d63384; }
+        .bg-photos { background: linear-gradient(to bottom, #2c0e18, #5a192c); }
+        .bg-letter { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
 
-<style>
-body{
-    font-family:'Poppins',sans-serif;
-    background:#000;
-    margin:0;
-    height:100vh;
-    overflow:hidden;
-    color:#fce7f3;
-}
-.font-dancing{font-family:'Dancing Script',cursive;}
-.font-playfair{font-family:'Playfair Display',serif;}
+        /* --- Carousel Styles --- */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            /* Dynamic height based on screen size so it fits everywhere */
+            height: 50vh; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            margin-top: -20px; /* Slight pull up */
+        }
+        
+        .carousel-item {
+            position: absolute;
+            /* Responsive Width/Height */
+            width: 65vw; 
+            max-width: 300px;
+            height: 45vh; /* Fits within viewport */
+            max-height: 450px;
+            
+            border-radius: 15px;
+            background: #fff;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid #ec4899; 
+            box-shadow: 0 0 15px #ec4899;
+            will-change: transform; /* Performance optimization */
+        }
 
-.section{
-    display:none;
-    position:fixed;
-    inset:0;
-    width:100vw;
-    height:100vh;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    opacity:0;
-    transition:opacity .8s ease;
-    overflow:hidden;
-}
-.section.active{
-    display:flex;
-    opacity:1;
-}
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
 
-/* BACKGROUNDS */
-.bg-intro{background:radial-gradient(circle,#2a0a18,#000);}
-.bg-wish{background:linear-gradient(135deg,#ff9a9e,#fecfef);color:#b4235a;}
-.bg-photos{background:linear-gradient(to bottom,#2c0e18,#5a192c);}
-.bg-letter{background:linear-gradient(135deg,#667eea,#764ba2);}
+        /* --- Falling Petals --- */
+        .petal {
+            position: fixed;
+            top: -10vh;
+            font-size: 1.5rem;
+            pointer-events: none;
+            z-index: 50;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(720deg); }
+        }
 
-/* CAROUSEL */
-.carousel-container{
-    position:relative;
-    width:100%;
-    height:52vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    perspective:1000px;
-}
-.carousel-item{
-    position:absolute;
-    width:65vw;
-    max-width:300px;
-    height:42vh;
-    max-height:420px;
-    border-radius:16px;
-    overflow:hidden;
-    background:#fff;
-    border:3px solid #ec4899;
-    box-shadow:0 0 18px #ec4899;
-    cursor:pointer;
-}
-.carousel-item img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
+        /* --- ENVELOPE STYLES --- */
+        .envelope-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+            perspective: 1000px;
+        }
 
-/* NAV BUTTONS */
-.nav-btn{
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    background:rgba(236,72,153,.85);
-    color:#fff;
-    border:none;
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    font-size:1.2rem;
-    z-index:30;
-}
+        .envelope {
+            width: 85vw; /* Mobile friendly width */
+            max-width: 320px;
+            height: 200px;
+            background: #be123c;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            z-index: 20;
+        }
 
-/* LETTER */
-.envelope-wrapper{
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-.envelope{
-    width:85vw;
-    max-width:320px;
-    height:200px;
-    background:#be123c;
-    position:relative;
-}
-.envelope-flap{
-    position:absolute;
-    width:0;height:0;
-    border-left:160px solid transparent;
-    border-right:160px solid transparent;
-    border-top:130px solid #e11d48;
-    top:0;
-    left:0;
-    transform-origin:top;
-}
-.envelope-pocket{
-    position:absolute;
-    width:0;height:0;
-    border-left:160px solid transparent;
-    border-right:160px solid transparent;
-    border-bottom:140px solid #fb7185;
-    bottom:0;
-    left:0;
-}
-.letter-content{
-    position:absolute;
-    bottom:10px;
-    width:92vw;
-    max-width:600px;
-    height:70vh;
-    background:#fffdf7;
-    padding:18px;
-    border-radius:6px;
-    overflow-y:auto;
-    opacity:0;
-    transform:scale(.9);
-    scrollbar-width:none;
-}
-.letter-content::-webkit-scrollbar{display:none;}
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 42.5vw solid transparent; /* Responsive borders */
+            border-right: 42.5vw solid transparent;
+            border-top: 130px solid #e11d48;
+            transform-origin: top;
+            z-index: 6;
+        }
+        /* Max width override for flap on desktop */
+        @media(min-width: 380px) {
+            .envelope-flap {
+                border-left: 160px solid transparent;
+                border-right: 160px solid transparent;
+            }
+        }
 
-@media(max-width:480px){
-    .letter-content{font-size:14px;padding:16px;}
-}
-</style>
+        .envelope-pocket {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 42.5vw solid transparent;
+            border-right: 42.5vw solid transparent;
+            border-bottom: 140px solid #fb7185;
+            z-index: 5;
+        }
+        @media(min-width: 380px) {
+            .envelope-pocket {
+                border-left: 160px solid transparent;
+                border-right: 160px solid transparent;
+            }
+        }
+
+        /* The Paper/Letter */
+        .letter-content {
+            position: absolute;
+            bottom: 10px;
+            width: 90%;
+            max-width: 500px;
+            background: #fffdf7;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 3;
+            transform: scale(0.8);
+            opacity: 0;
+            overflow-y: auto; /* ALLOW SCROLLING INSIDE LETTER */
+            border-radius: 5px;
+            /* Hide scrollbar visually but keep functionality */
+            scrollbar-width: none; 
+            -ms-overflow-style: none;
+        }
+        .letter-content::-webkit-scrollbar { 
+            display: none; 
+        }
+
+        /* Navigation Buttons */
+        .nav-btn {
+            background: rgba(236, 72, 153, 0.8);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 30;
+        }
+    </style>
 </head>
-
 <body>
 
-<audio id="bgMusic" loop>
-    <source src="love_song.mp3" type="audio/mpeg">
-</audio>
+    <audio id="bgMusic" loop>
+        <source src="love_song.mp3" type="audio/mpeg">
+    </audio>
 
-<!-- SCREEN 1 -->
-<div id="screen-1" class="section active bg-intro">
-    <h1 class="text-6xl font-dancing text-pink-500 mb-6 text-center">For Amna…</h1>
-    <p class="text-pink-200 mb-10">I have a surprise for you</p>
-    <button onclick="startJourney()" class="px-10 py-4 bg-pink-600 rounded-full text-white font-bold text-xl animate-bounce">
-        Tap to Open ❤️
-    </button>
-</div>
+    <div id="hearts-container" class="fixed inset-0 pointer-events-none z-0"></div>
 
-<!-- SCREEN 2 -->
-<div id="screen-2" class="section bg-wish text-center px-4">
-    <h1 id="wish-title" class="text-6xl font-dancing scale-0">Happy Valentine’s Day 🌹</h1>
-    <p id="wish-sub" class="mt-4 opacity-0">You make my life beautiful.</p>
-    <button id="wish-btn" onclick="nextSection(3)" class="mt-10 px-8 py-3 bg-white text-pink-600 rounded-full opacity-0">
-        See Our Memories ➡️
-    </button>
-</div>
-
-<!-- SCREEN 3 -->
-<div id="screen-3" class="section bg-photos">
-    <h2 class="absolute top-6 text-3xl font-dancing text-pink-300">Our Moments</h2>
-
-    <div class="carousel-container">
-        <button class="nav-btn left-3" onclick="moveSlide(-1)">❮</button>
-        <div id="track"></div>
-        <button class="nav-btn right-3" onclick="moveSlide(1)">❯</button>
+    <div id="screen-1" class="section active bg-intro">
+        <h1 class="text-5xl md:text-8xl font-dancing text-pink-500 mb-6 drop-shadow-lg text-center px-4">
+            For Amna...
+        </h1>
+        <p class="text-pink-200 text-lg mb-10 font-light tracking-wide">I have a surprise for you</p>
+        
+        <button onclick="startJourney()" class="px-10 py-4 bg-gradient-to-r from-pink-600 to-rose-600 rounded-full text-white font-bold text-xl shadow-lg animate-bounce border-2 border-pink-400 z-50">
+            Tap to Open ❤️
+        </button>
     </div>
 
-    <!-- FIXED CAPTION -->
-    <div class="absolute bottom-16 md:bottom-20 w-full text-center px-4">
-        <p id="caption" class="font-playfair text-lg text-pink-200 italic"></p>
+    <div id="screen-2" class="section bg-wish text-center px-4">
+        <h1 class="text-5xl md:text-7xl font-dancing font-bold text-pink-700 mb-4 scale-0 leading-tight" id="wish-title">
+            Happy<br>Valentine's<br>Day! 🌹
+        </h1>
+        <p class="text-lg text-rose-800 mt-2 opacity-0" id="wish-sub">
+            You make my life beautiful.
+        </p>
+        <button onclick="nextSection(3)" class="mt-12 px-8 py-3 bg-white text-pink-600 rounded-full font-bold shadow-xl transition opacity-0" id="wish-btn">
+            See Our Memories ➡️
+        </button>
     </div>
 
-    <!-- FIXED BUTTON POSITION -->
-    <button onclick="nextSection(4)"
-    class="absolute bottom-24 md:bottom-10 px-6 py-3 bg-pink-900/50 border border-pink-400 rounded-full text-pink-100">
-        One Last Thing… ↓
-    </button>
-</div>
+    <div id="screen-3" class="section bg-photos relative">
+        <h2 class="absolute top-8 text-3xl md:text-4xl font-dancing text-pink-300 z-20">Our Moments</h2>
 
-<!-- SCREEN 4 -->
-<div id="screen-4" class="section bg-letter">
-    <div class="envelope-wrapper">
-        <div class="envelope" id="envelope">
-            <div class="envelope-flap" id="flap"></div>
-            <div class="envelope-pocket" id="pocket"></div>
+        <div class="carousel-container">
+            <button class="nav-btn absolute left-2 md:left-10" onclick="moveSlide(-1)">❮</button>
+            <div id="track" class="w-full h-full flex justify-center items-center relative"></div>
+            <button class="nav-btn absolute right-2 md:right-10" onclick="moveSlide(1)">❯</button>
+        </div>
 
-            <div class="letter-content" id="letter">
-                <h2 class="text-2xl font-dancing text-center text-rose-600 mb-4">
-                    Meri Shayaari, Meri Amna…
-                </h2>
+        <div class="absolute bottom-20 w-full flex items-center justify-center px-4 text-center z-20">
+            <p id="caption" class="text-lg md:text-2xl font-playfair text-pink-200 italic transition-opacity duration-300 min-h-[3rem]"></p>
+        </div>
 
-                <p class="italic text-center text-rose-500 mb-4">
-                    “Mohabbat har baar hoti hai jab main aapko dekhta hoon.”
-                </p>
+        <button onclick="nextSection(4)" class="absolute bottom-8 px-6 py-3 border border-pink-400 bg-pink-900/40 backdrop-blur-sm text-pink-100 rounded-full hover:bg-pink-800/60 transition z-50 text-sm md:text-base">
+            One Last Thing... ↓
+        </button>
+    </div>
 
-                <p class="font-playfair text-gray-800 leading-relaxed">
-                    Amna, aap mere sukoon ho… meri har dua ka jawab.
-                    Vaada hai — bheed mein kabhi aapka haath nahi chhodunga.
-                </p>
+    <div id="screen-4" class="section bg-letter">
+        <div id="petals-container"></div>
 
-                <p class="text-center font-dancing text-rose-600 mt-6 text-xl">
-                    Happy Valentine’s Day ❤️
-                </p>
+        <div class="envelope-wrapper">
+            <div class="envelope" id="envelope">
+                
+                <div class="envelope-flap" id="flap"></div>
+                <div class="envelope-pocket" id="pocket"></div>
+
+                <div class="letter-content" id="letter">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 w-32 h-8 bg-pink-200/40 -rotate-1"></div>
+                    
+                    <h2 class="text-2xl font-dancing text-center text-rose-600 mb-4 mt-2">Meri Shayaari, Meri Amna...</h2>
+                    
+                    <div class="space-y-4 text-gray-800 font-playfair leading-relaxed text-sm md:text-base text-justify">
+                        <p class="text-center italic text-rose-500 font-semibold text-base">
+                            "Log kehte hain mohabbat ek baar hoti hai,<br>
+                            Par main jab jab aapko dekhta hoon, mujhe har baar hoti hai."
+                        </p>
+
+                        <p>
+                            Amna, log Valentine's Day par tohfe dete hain, par main aapko apna aane wala har lamha dena chahta hoon. Aap mere liye sirf ek rishta nahi ho, aap sukoon ka wo thikana ho jahan main din bhar ki thakan ke baad panah leta hoon. 
+                        </p>
+
+                        <p>
+                            
+                        </p>
+
+                        <p>
+                             Vaada hai mera, duniya ki bheed mein kabhi aapka haath nahi chodunga.
+                        </p>
+
+                        <div class="pt-4 text-center">
+                            <p class="text-lg font-dancing text-rose-600 font-bold">
+                                Happy Valentine's Day, My Queen. 👑
+                            </p>
+                        </div>
+                        
+                        <div class="text-center text-rose-400 text-[10px] mt-2 animate-pulse">(Scroll inside to read more)</div>
+
+                        <div class="mt-6 pt-4 border-t border-dashed border-rose-200 pb-4">
+                            <p class="text-right text-gray-600 italic text-xs">Humesha ke liye aapka,</p>
+                            <p class="text-right font-bold text-rose-600">
+                                <span class="text-2xl font-dancing">Dev</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <button onclick="location.reload()" class="fixed top-5 right-5 text-pink-100 hover:text-white text-xs bg-black/20 px-3 py-1 rounded-full z-50">
+            Restart ↻
+        </button>
     </div>
-</div>
 
-<script>
-const slides=[
-{img:"pic1.png",caption:"I love you more than words 💖"},
-{img:"pic2.jpg",caption:"Your smile is my strength ✨"},
-{img:"pic3.jpg",caption:"Forever starts with us ❤️"}
-];
-let currentSlide=0;
+    <script>
+        const slides = [
+            { img: "pic1.png", caption: "I love you more than words can say 💖" },
+            { img: "pic2.jpg", caption: "You are full of surprises! 🎁" },
+            { img: "pic3.jpg", caption: "Your smile is my daily motivation ✨" },
+            { img: "pic4.png", caption: "Our most precious memory together 🌟" },
+            { img: "pic5.png", caption: "You are my favorite notification 📱❤️" },
+            { img: "pic6.jpg", caption: "Every moment with you is a treasure 💎" },
+            { img: "pic7.png", caption: "My heart is wherever you are 🏠❤️" },
+            { img: "pic8.jpg", caption: "To many more years of us! 🥂" }
+        ];
 
-function startJourney(){
-document.getElementById('bgMusic').play().catch(()=>{});
-nextSection(2);
-setTimeout(()=>{
-gsap.to("#wish-title",{scale:1,duration:1});
-gsap.to("#wish-sub",{opacity:1,delay:.4});
-gsap.to("#wish-btn",{opacity:1,delay:1});
-},300);
-}
+        let currentSlide = 0;
+        const bgMusic = document.getElementById('bgMusic');
 
-function nextSection(n){
-document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-document.getElementById(`screen-${n}`).classList.add('active');
-if(n===3)renderCarousel();
-if(n===4)openLetter();
-}
+        function startJourney() {
+            bgMusic.play().catch(e => console.log("Audio interaction needed"));
+            nextSection(2);
+            setTimeout(() => {
+                gsap.to("#wish-title", { scale: 1, duration: 1, ease: "elastic.out(1, 0.3)" });
+                gsap.to("#wish-sub", { opacity: 1, y: 0, delay: 0.5, duration: 1 });
+                gsap.to("#wish-btn", { opacity: 1, y: 0, delay: 1.5, duration: 1 });
+            }, 500);
+        }
 
-function renderCarousel(){
-const track=document.getElementById('track');
-track.innerHTML='';
-slides.forEach((s,i)=>{
-const d=document.createElement('div');
-d.className='carousel-item';
-const img=document.createElement('img');
-img.src=s.img;
-d.appendChild(img);
-d.onclick=()=>moveSlide(i-currentSlide);
-track.appendChild(d);
-});
-updateCarousel();
-}
+        function nextSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            const next = document.getElementById(screen-${id});
+            next.classList.add('active');
+            
+            if(id === 3) renderCarousel();
+            if(id === 4) startLetterAnimation();
+        }
 
-function moveSlide(d){
-currentSlide=(currentSlide+d+slides.length)%slides.length;
-updateCarousel();
-}
+        function renderCarousel() {
+            const track = document.getElementById('track');
+            track.innerHTML = '';
+            slides.forEach((slide, index) => {
+                const el = document.createElement('div');
+                el.className = 'carousel-item';
+                
+                const img = document.createElement('img');
+                img.src = slide.img;
+                img.onerror = function() {
+                    this.style.display = 'none';
+                    const errDiv = document.createElement('div');
+                    Object.assign(errDiv.style, {
+                        width: '100%', height: '100%',
+                        backgroundColor: '#fce7f3', color: '#db2777',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        textAlign: 'center', padding: '10px', fontSize: '12px'
+                    });
+                    errDiv.innerHTML = <strong>Photo?</strong><br>${slide.img};
+                    el.appendChild(errDiv);
+                };
+                el.onclick = () => moveSlide(index - currentSlide);
+                el.appendChild(img);
+                track.appendChild(el);
+            });
+            updateCarousel();
+        }
 
-function updateCarousel(){
-const items=document.querySelectorAll('.carousel-item');
-items.forEach((el,i)=>{
-const o=i-currentSlide;
-if(o===0){
-el.style.transform="translateX(0) scale(1)";
-el.style.zIndex=10;
-el.style.opacity=1;
-}else{
-el.style.transform=`translateX(${o*160}px) scale(.8)`;
-el.style.zIndex=5;
-el.style.opacity=.5;
-}
-});
-document.getElementById('caption').textContent=slides[currentSlide].caption;
-}
+        function moveSlide(direction) {
+            currentSlide = (currentSlide + direction + slides.length) % slides.length;
+            updateCarousel();
+        }
 
-function openLetter(){
-gsap.timeline()
-.to("#flap",{rotateX:180,duration:1})
-.to("#letter",{opacity:1,scale:1,y:0,duration:1.2,ease:"power3.out"});
-}
-</script>
+        function updateCarousel() {
+            const items = document.querySelectorAll('.carousel-item');
+            const captionEl = document.getElementById('caption');
+            captionEl.style.opacity = 0;
 
+            items.forEach((item, index) => {
+                const offset = index - currentSlide;
+                let zIndex = 0, transform = '', opacity = 0, pointerEvents = 'none';
+                
+                let visualOffset = offset;
+                if(offset > slides.length/2) visualOffset -= slides.length;
+                if(offset < -slides.length/2) visualOffset += slides.length;
+
+                // Spacing logic (Compact for mobile)
+                if (visualOffset === 0) {
+                    transform = 'translateX(0) scale(1)';
+                    zIndex = 10; opacity = 1; pointerEvents = 'auto';
+                } else if (Math.abs(visualOffset) === 1) {
+                    // Closer overlap for mobile
+                    const xOffset = visualOffset * (window.innerWidth < 600 ? 150 : 220); 
+                    transform = translateX(${xOffset}px) scale(0.8) rotateY(${visualOffset * -15}deg);
+                    zIndex = 5; opacity = 0.6; pointerEvents = 'auto'; 
+                } else {
+                    transform = translateX(${visualOffset * 100}px) scale(0);
+                    opacity = 0;
+                }
+                item.style.transform = transform;
+                item.style.zIndex = zIndex;
+                item.style.opacity = opacity;
+                item.style.pointerEvents = pointerEvents;
+            });
+
+            setTimeout(() => {
+                captionEl.textContent = slides[currentSlide].caption;
+                captionEl.style.opacity = 1;
+            }, 300);
+        }
+
+        // --- FIXED LETTER ANIMATION ---
+        function startLetterAnimation() {
+            const container = document.getElementById('petals-container');
+            const roseTypes = ['🌺','🌸']; 
+            
+            const createPetal = () => {
+                const el = document.createElement('div');
+                el.className = 'petal';
+                el.textContent = roseTypes[Math.floor(Math.random() * roseTypes.length)];
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.animationDuration = Math.random() * 3 + 4 + 's';
+                el.style.fontSize = Math.random() * 15 + 15 + 'px';
+                container.appendChild(el);
+                setTimeout(() => el.remove(), 7000);
+            };
+            const interval = setInterval(createPetal, 300);
+            setTimeout(() => clearInterval(interval), 20000);
+
+            const tl = gsap.timeline({ delay: 0.5 });
+
+            tl.to("#flap", { 
+                rotateX: 180, 
+                duration: 1, 
+                ease: "power2.inOut" 
+            })
+            .to("#letter", { 
+                y: -120, 
+                opacity: 1,
+                zIndex: 4, 
+                duration: 1,
+                ease: "back.out(1.2)"
+            })
+            .to("#letter", {
+                zIndex: 50,
+                y: 0,
+                scale: 1,
+                height: "80vh",
+                width: "90vw",
+                maxWidth: "600px",
+                duration: 1.5,
+                ease: "power3.out"
+            }, "+=0.2")
+            // Fade out flaps only, fade background of envelope transparent
+            .to(["#flap", "#pocket"], {
+                opacity: 0,
+                duration: 0.5
+            }, "-=1.0")
+            .to("#envelope", {
+                backgroundColor: "rgba(190, 18, 60, 0)",
+                boxShadow: "0 0 0 rgba(0,0,0,0)",
+                duration: 0.5
+            }, "<");
+        }
+
+        function initHearts() {
+            const container = document.getElementById('hearts-container');
+            setInterval(() => {
+                const h = document.createElement('div');
+                h.textContent = '❤️';
+                Object.assign(h.style, {
+                    position: 'absolute', left: Math.random() * 100 + '%',
+                    top: '100%', opacity: 0.3,
+                    fontSize: Math.random() * 20 + 10 + 'px',
+                    transition: 'all 8s linear'
+                });
+                container.appendChild(h);
+                setTimeout(() => {
+                    h.style.top = '-10%';
+                    h.style.transform = rotate(${Math.random() * 360}deg);
+                }, 100);
+                setTimeout(() => h.remove(), 8000);
+            }, 800);
+        }
+        initHearts();
+    </script>
 </body>
 </html>
